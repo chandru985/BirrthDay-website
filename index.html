@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A premium birthday celebration website" />
+    <title>Happy Birthday — A Special Celebration</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <!-- ============================
+         PERSONALIZATION CONFIG (edit these)
+         ============================ -->
+    <script>
+        // Editable personal details — change these values to customize the site.
+        window.BIRTHDAY_CONFIG = {
+            name: "UTHRA",
+            from: "Your Best Brother",
+            date: "September 4, 2026",
+            // Target ISO date for the countdown (YYYY-MM-DDTHH:MM:SS)
+            targetISO: "2026-09-04T00:00:00",
+            profileImage: "photos/3.jpeg",
+            photos: [
+                "photos/3.jpeg",
+                "photos/6.jpeg",
+                "photos/5.jpeg",
+                "photos/4.jpeg",
+                "photos/2.jpeg",
+                "photos/1.jpeg",
+                "photos/3.jpeg",
+                "photos/3.jpeg"
+            ]
+        };
+    </script>
+
+    <!-- Animated background canvas (particles + stars) -->
+    <canvas id="bgCanvas" aria-hidden="true"></canvas>
+    <div class="gradient-orbs" aria-hidden="true">
+        <span class="orb orb-1"></span>
+        <span class="orb orb-2"></span>
+        <span class="orb orb-3"></span>
+    </div>
+
+    <!-- Floating hearts container -->
+    <div id="floatingHearts" class="floating-hearts" aria-hidden="true"></div>
+
+    <!-- Music control -->
+    <button id="musicBtn" class="music-btn" aria-label="Toggle music" title="Toggle music">
+        <span class="music-icon">🎵</span>
+        <span class="music-label">Music</span>
+    </button>
+    <audio id="bgMusic" src="assets/Happy-Birthday-Song-For-Kids.mp3" loop></audio>
+
+    <!-- Back to top -->
+    <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+    <!-- ===================== HERO ===================== -->
+    <section id="hero" class="hero">
+        <div class="hero-inner">
+            <p class="hero-date" data-bind="date"></p>
+            <div class="hero-profile">
+                <div class="profile-ring">
+                    <img id="profileImg" alt="Profile" />
+                </div>
+            </div>
+            <h1 class="hero-title">
+                Happy Birthday, <span class="gold" data-bind="name"></span> <span class="heart">❤️</span>
+            </h1>
+            <p class="hero-subtitle">Today is all about celebrating someone truly special.</p>
+            <a href="#countdown" class="btn btn-gold">✨ Begin the Celebration</a>
+        </div>
+        <div class="scroll-hint" aria-hidden="true">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- ===================== COUNTDOWN ===================== -->
+    <section id="countdown" class="section">
+        <div class="container">
+            <p class="eyebrow reveal">Mark the Moment</p>
+            <h2 class="section-title reveal">The Celebration Begins In</h2>
+
+            <div class="countdown reveal">
+                <div class="time-card">
+                    <span id="days" class="time-num">00</span>
+                    <span class="time-label">Days</span>
+                </div>
+                <div class="time-card">
+                    <span id="hours" class="time-num">00</span>
+                    <span class="time-label">Hours</span>
+                </div>
+                <div class="time-card">
+                    <span id="minutes" class="time-num">00</span>
+                    <span class="time-label">Minutes</span>
+                </div>
+                <div class="time-card">
+                    <span id="seconds" class="time-num">00</span>
+                    <span class="time-label">Seconds</span>
+                </div>
+            </div>
+            <p id="countdownMessage" class="countdown-message hidden">🎉 It's Celebration Time! 🎂</p>
+        </div>
+    </section>
+
+    <!-- ===================== SPECIAL MESSAGE ===================== -->
+    <section id="message" class="section">
+        <div class="container">
+            <p class="eyebrow reveal">A Little Note</p>
+            <h2 class="section-title reveal">A Little Message For You <span class="heart">❤️</span></h2>
+
+            <div class="glass-card message-card reveal">
+                <p>Some people make ordinary moments feel <em>extraordinary</em>.</p>
+                <p>Today is a reminder of how special you truly are.</p>
+                <p>May this new chapter bring you happiness, unforgettable memories, beautiful surprises, and everything your heart wishes for.</p>
+                <p class="highlight">Happy Birthday! <span class="heart">❤️</span></p>
+                <p class="signature">With lots of love, <span data-bind="from"></span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== PHOTO MEMORIES ===================== -->
+    <section id="gallery" class="section">
+        <div class="container">
+            <p class="eyebrow reveal">Cherished Moments</p>
+            <h2 class="section-title reveal">Beautiful Memories</h2>
+
+            <div id="galleryGrid" class="gallery-grid reveal"></div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" aria-hidden="true">
+        <button class="lb-close" aria-label="Close">×</button>
+        <button class="lb-prev" aria-label="Previous">‹</button>
+        <button class="lb-next" aria-label="Next">›</button>
+        <img id="lbImg" alt="Photo preview" />
+        <div class="lb-counter"><span id="lbCounter"></span></div>
+    </div>
+
+    <!-- ===================== WHY YOU ARE SPECIAL ===================== -->
+    <section id="special" class="section">
+        <div class="container">
+            <p class="eyebrow reveal">In Your Honor</p>
+            <h2 class="section-title reveal">Why You Are Special</h2>
+
+            <div class="special-grid">
+                <div class="special-card glass-card reveal">
+                    <div class="special-icon">❤️</div>
+                    <h3>Your Kindness</h3>
+                    <p>You have a way of making people feel valued.</p>
+                </div>
+                <div class="special-card glass-card reveal">
+                    <div class="special-icon">✨</div>
+                    <h3>Your Smile</h3>
+                    <p>One smile from you can brighten an entire day.</p>
+                </div>
+                <div class="special-card glass-card reveal">
+                    <div class="special-icon">🌟</div>
+                    <h3>Your Heart</h3>
+                    <p>Your beautiful heart makes you unforgettable.</p>
+                </div>
+                <div class="special-card glass-card reveal">
+                    <div class="special-icon">🎁</div>
+                    <h3>Your Presence</h3>
+                    <p>Life is better simply because you're in it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== TIMELINE ===================== -->
+    <!-- <section id="timeline" class="section">
+        <div class="container">
+            <p class="eyebrow reveal">Through The Years</p>
+            <h2 class="section-title reveal">Our Beautiful Journey</h2>
+
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <div class="t-dot"></div>
+                    <div class="t-card glass-card">
+                        <span class="t-year">2021</span>
+                        <h4>The Beginning</h4>
+                        <p>One beautiful chapter started.</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="t-dot"></div>
+                    <div class="t-card glass-card">
+                        <span class="t-year">2022</span>
+                        <h4>Amazing Memories</h4>
+                        <p>So many moments worth remembering.</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="t-dot"></div>
+                    <div class="t-card glass-card">
+                        <span class="t-year">2023</span>
+                        <h4>More Adventures</h4>
+                        <p>More laughter, more memories.</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="t-dot"></div>
+                    <div class="t-card glass-card">
+                        <span class="t-year">2024</span>
+                        <h4>Unforgettable Moments</h4>
+                        <p>Another year filled with beautiful memories.</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="t-dot"></div>
+                    <div class="t-card glass-card">
+                        <span class="t-year">2025</span>
+                        <h4>A New Chapter</h4>
+                        <p>More happiness waiting ahead.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- ===================== SURPRISE ===================== -->
+    <section id="surprise" class="section">
+        <div class="container surprise-wrap">
+            <p class="eyebrow reveal">A Hidden Treat</p>
+            <h2 class="section-title reveal">There's One More Surprise... <span class="heart">🎁</span></h2>
+
+            <button id="surpriseBtn" class="btn btn-gold big-btn reveal">Open Your Surprise</button>
+
+            <div id="surpriseReveal" class="surprise-reveal hidden">
+                <div class="glass-card surprise-card">
+                    <h3>🎉 Surprise!</h3>
+                    <p>You deserve all the happiness in the world.</p>
+                    <p>Keep smiling, keep dreaming,<br />and never stop being the amazing person you are.</p>
+                    <p class="highlight">Happy Birthday, <span data-bind="name"></span>! <span class="heart">❤️</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== CAKE ===================== -->
+    <section id="cake" class="section">
+        <div class="container">
+            <p class="eyebrow reveal">A Sweet Moment</p>
+            <h2 class="section-title reveal">Make a Wish ✨</h2>
+
+            <div class="cake-stage reveal">
+                <div class="cake">
+                    <div class="candles">
+                        <div class="candle"><div class="flame"></div></div>
+                        <div class="candle"><div class="flame"></div></div>
+                        <div class="candle"><div class="flame"></div></div>
+                    </div>
+                    <div class="layer layer-top">
+                        <div class="frosting"></div>
+                    </div>
+                    <div class="layer layer-mid"></div>
+                    <div class="layer layer-bottom">
+                        <div class="drips"></div>
+                    </div>
+                    <div class="plate"></div>
+                </div>
+            </div>
+
+            <button id="blowBtn" class="btn btn-gold">Blow the Candles 🎂</button>
+            <p id="wishText" class="wish-text hidden">✨ Wish Made! ✨</p>
+        </div>
+    </section>
+
+    <!-- ===================== FINAL ===================== -->
+    <section id="final" class="final">
+        <div class="container">
+            <h2 class="final-title">Here's To Another Beautiful Year ✨</h2>
+            <p class="final-sub">May your days be filled with laughter,<br />your heart with love,<br />and your life with unforgettable moments.</p>
+            <p class="final-name">Happy Birthday, <span data-bind="name"></span> <span class="heart">❤️</span></p>
+        </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="footer">
+        <p>Made with <span class="heart">❤️</span> especially for <span data-bind="name"></span></p>
+        <p class="muted">2026 Birthday Celebration uthra</p>
+    </footer>
+
+    <!-- Confetti canvas -->
+    <canvas id="confettiCanvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
+    <script src="script.js"></script>
+</body>
+</html>
