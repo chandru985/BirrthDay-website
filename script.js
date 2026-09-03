@@ -372,12 +372,19 @@
     ------------------------------------------------- */
     function initGreetingCard() {
         const card = $('#greetingCard');
+        const audio = $('#bgMusic');
+        const btn = $('#musicBtn');
         if (!card) return;
         function open() {
             card.classList.add('opened');
             burstConfetti();
             burstHearts(30);
             setTimeout(() => card.remove(), 900);
+            if (audio && audio.paused) {
+                const p = audio.play();
+                if (p && p.catch) p.catch(() => {});
+            }
+            if (btn) btn.classList.add('playing');
         }
         card.addEventListener('click', open);
         card.addEventListener('keydown', e => {
@@ -407,6 +414,44 @@
     }
 
     /* -------------------------------------------------
+       Premium Interactions
+    ------------------------------------------------- */
+    function initPremiumEffects() {
+        const hero = document.querySelector('.hero-inner');
+        if (hero) {
+            let ticking = false;
+            document.addEventListener('mousemove', e => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                        hero.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+        }
+
+        const cards = document.querySelectorAll('.special-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+    }
+
+    /* -------------------------------------------------
        Init
     ------------------------------------------------- */
     document.addEventListener('DOMContentLoaded', () => {
@@ -422,6 +467,7 @@
         initMusic();
         initGreetingCard();
         initSmoothScroll();
+        initPremiumEffects();
         ambientHearts();
     });
 })();
