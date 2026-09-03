@@ -368,6 +368,27 @@
     }
 
     /* -------------------------------------------------
+       Greeting Card
+    ------------------------------------------------- */
+    function initGreetingCard() {
+        const card = $('#greetingCard');
+        if (!card) return;
+        function open() {
+            card.classList.add('opened');
+            burstConfetti();
+            burstHearts(30);
+            setTimeout(() => card.remove(), 900);
+        }
+        card.addEventListener('click', open);
+        card.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                open();
+            }
+        });
+    }
+
+    /* -------------------------------------------------
        Smooth scroll for in-page anchors
     ------------------------------------------------- */
     function initSmoothScroll() {
@@ -399,6 +420,7 @@
         initReveal();
         initBackToTop();
         initMusic();
+        initGreetingCard();
         initSmoothScroll();
         ambientHearts();
     });
