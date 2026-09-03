@@ -267,8 +267,10 @@
         const ctx = canvas.getContext('2d');
         const pieces = [];
         const colors = ['#e8c98a', '#7a1f3d', '#c97a8a', '#f5e0b3', '#efe6d2'];
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const pieceCount = isTouch ? 80 : 160;
 
-        for (let i = 0; i < 160; i++) {
+        for (let i = 0; i < pieceCount; i++) {
             pieces.push({
                 x: window.innerWidth / 2 + (Math.random() - 0.5) * 200,
                 y: window.innerHeight / 2,
@@ -417,38 +419,42 @@
        Premium Interactions
     ------------------------------------------------- */
     function initPremiumEffects() {
-        const hero = document.querySelector('.hero-inner');
-        if (hero) {
-            let ticking = false;
-            document.addEventListener('mousemove', e => {
-                if (!ticking) {
-                    requestAnimationFrame(() => {
-                        const x = (e.clientX / window.innerWidth - 0.5) * 20;
-                        const y = (e.clientY / window.innerHeight - 0.5) * 20;
-                        hero.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+        if (!isTouch) {
+            const hero = document.querySelector('.hero-inner');
+            if (hero) {
+                let ticking = false;
+                document.addEventListener('mousemove', e => {
+                    if (!ticking) {
+                        requestAnimationFrame(() => {
+                            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                            hero.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                });
+            }
+
+            const cards = document.querySelectorAll('.special-card');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                });
             });
         }
-
-        const cards = document.querySelectorAll('.special-card');
-        cards.forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / 20;
-                const rotateY = (centerX - x) / 20;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = '';
-            });
-        });
     }
 
     /* -------------------------------------------------

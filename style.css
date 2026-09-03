@@ -1306,45 +1306,219 @@ body::after {
 /* =========================================================
    RESPONSIVE
    ========================================================= */
+
+/* Touch highlight suppression for interactive elements */
+ .btn, .music-btn, .back-to-top, .special-card, .gallery-item,
+ .lb-close, .lb-prev, .lb-next, .surprise-reveal button,
+ #greetingCard, #blowBtn, #surpriseBtn, a, button {
+     -webkit-tap-highlight-color: transparent;
+ }
+
+ /* Safe area insets for devices with notches (iPhone X+) */
+ @supports (padding: max(0px, env(safe-area-inset-bottom))) {
+     .music-btn {
+         bottom: max(20px, env(safe-area-inset-bottom));
+         right: max(20px, env(safe-area-inset-right));
+     }
+     .back-to-top {
+         bottom: max(20px, env(safe-area-inset-bottom));
+         left: max(20px, env(safe-area-inset-left));
+     }
+     .greeting-inner { padding: max(1.5rem, env(safe-area-inset-top)); }
+ }
+
+/* Large screens (laptops, small desktops) */
+@media (max-width: 1200px) {
+    .container { max-width: 1100px; }
+    .hero { padding: 5rem 1.5rem 3rem; }
+    .section { padding: 5rem 1.5rem; }
+    .time-card { padding: 1.8rem 1rem; }
+    .special-card { padding: 2rem 1.6rem; }
+}
+
+/* Tablet (iPad, large phones landscape) */
 @media (max-width: 900px) {
     .gallery-grid { column-count: 3; }
     .hero-profile { width: 150px; height: 150px; }
+    .hero { padding: 5rem 1.5rem 3rem; }
+    .countdown { gap: 1rem; }
+    .time-card { padding: 1.8rem 1rem; }
+    .btn { padding: 0.9rem 2rem; font-size: 0.85rem; }
+    .eyebrow { letter-spacing: 0.25em; font-size: 0.7rem; }
 }
 
-@media (max-width: 700px) {
-    .section { padding: 4.5rem 1.2rem; }
+/* Large phone / small tablet */
+@media (max-width: 768px) {
+    .section { padding: 4.5rem 1rem; }
     .section::before { height: 40px; }
-    .countdown { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+    .hero { padding: 4rem 1rem 2.5rem; }
+    .hero-inner { max-width: 700px; }
+    .hero-title { font-size: clamp(2rem, 7vw, 3.2rem); }
+    .hero-subtitle { margin-bottom: 2rem; }
+    .hero-date { font-size: 0.7rem; letter-spacing: 0.3em; margin-bottom: 1.5rem; }
+
+    .hero-profile {
+        width: 140px;
+        height: 140px;
+    }
+
+    .greeting-icon { font-size: 4rem; }
+    .greeting-title { font-size: clamp(2rem, 7vw, 3rem); }
+
+    .countdown {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
     .time-card { padding: 1.5rem 0.8rem; }
+    .time-num { font-size: clamp(1.5rem, 6vw, 2.5rem); }
+    .time-label { font-size: 0.65rem; letter-spacing: 0.2em; }
+
     .gallery-grid { column-count: 2; column-gap: 0.8rem; }
     .gallery-item { margin-bottom: 0.8rem; }
-    .hero-profile { width: 140px; height: 140px; }
-    .lb-prev { left: 10px; } .lb-next { right: 10px; }
-    .lb-prev, .lb-next, .lb-close { width: 42px; height: 42px; font-size: 1.2rem; }
+
+    .special-grid { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .special-card { padding: 1.8rem 1.4rem; }
+    .special-icon { font-size: 2.2rem; }
+    .special-card h3 { font-size: 1.2rem; }
+
+    .cake-stage { min-height: 240px; }
+    .candles { gap: 22px; }
+    .layer-top { width: 120px; height: 48px; }
+    .layer-mid { width: 180px; height: 58px; }
+    .layer-bottom { width: 230px; height: 68px; }
+    .plate { width: 280px; }
+
+    .lb-close { top: 20px; right: 20px; }
+    .lb-prev { left: 20px; top: 50%; }
+    .lb-next { right: 20px; top: 50%; }
+    .lb-prev, .lb-next, .lb-close { width: 44px; height: 44px; font-size: 1.3rem; }
+    .lb-counter { bottom: 20px; font-size: 0.8rem; }
+    .lightbox img { max-width: 85vw; max-height: 80vh; }
+
     .music-btn { bottom: 20px; right: 20px; padding: 0.6rem 0.9rem; font-size: 0.78rem; }
-    .back-to-top { bottom: 20px; left: 20px; width: 42px; height: 42px; }
+    .music-icon { font-size: 1rem; }
+    .back-to-top { bottom: 20px; left: 20px; width: 44px; height: 44px; }
+
     .timeline { padding-left: 24px; }
     .timeline::before { left: 5px; }
     .t-dot { left: -25px; width: 14px; height: 14px; }
-    .glass-card { padding: 1.8rem; }
-    .special-grid { grid-template-columns: 1fr 1fr; }
-    .hero-date { font-size: 0.7rem; letter-spacing: 0.3em; }
+    .t-card { padding: 1.4rem 1.6rem; }
+    .t-card h4 { font-size: 1.15rem; }
+    .t-card p { font-size: 0.9rem; }
+
+    .glass-card { padding: 2rem; }
+    .message-card { font-size: 1rem; }
+    .message-card .highlight { font-size: 1.8rem; }
+    .message-card .signature { font-size: 1.4rem; }
+    .surprise-card h3 { font-size: 2.2rem; }
+    .surprise-card p { font-size: 1rem; }
+    .surprise-card .highlight { font-size: 1.3rem; }
+    .wish-text { font-size: 2rem; }
+
+    .btn { padding: 0.8rem 1.8rem; font-size: 0.8rem; }
+    .big-btn { padding: 1rem 2.2rem; font-size: 0.95rem; }
+    .eyebrow::before, .eyebrow::after { width: 30px; }
 }
 
+/* Medium-small phones */
+@media (max-width: 576px) {
+    .hero-profile { width: 130px; height: 130px; }
+    .hero-date { letter-spacing: 0.2em; }
+
+    .section { padding: 4rem 1rem; }
+    .hero { padding: 3.5rem 1rem 2rem; }
+
+    .countdown { gap: 0.6rem; }
+    .time-card { padding: 1.2rem 0.6rem; }
+    .time-label { font-size: 0.6rem; }
+
+    .gallery-grid { column-count: 2; column-gap: 0.6rem; }
+    .gallery-item { margin-bottom: 0.6rem; }
+
+    .special-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .special-card { padding: 1.6rem 1.2rem; }
+    .special-icon { font-size: 2rem; }
+    .special-card h3 { font-size: 1.1rem; }
+    .special-card p { font-size: 0.9rem; }
+
+    .cake-stage { min-height: 220px; }
+    .candles { gap: 18px; }
+    .layer-top { width: 100px; height: 40px; }
+    .layer-mid { width: 160px; height: 52px; }
+    .layer-bottom { width: 210px; height: 60px; }
+    .plate { width: 250px; }
+
+    .message-card { font-size: 0.95rem; }
+    .message-card .highlight { font-size: 1.6rem; }
+    .surprise-card h3 { font-size: 2rem; }
+    .surprise-card p { font-size: 0.95rem; }
+}
+
+/* Small phones */
 @media (max-width: 420px) {
     .gallery-grid { column-count: 1; }
-    .special-grid { grid-template-columns: 1fr; }
-    .candles { gap: 18px; }
-    .layer-top { width: 110px; height: 45px; }
-    .layer-mid { width: 160px; height: 55px; }
-    .layer-bottom { width: 210px; height: 65px; }
-    .plate { width: 260px; }
-    .hero-profile { width: 120px; height: 120px; }
     .hero-title { font-size: clamp(1.8rem, 8vw, 2.5rem); }
+    .hero-profile { width: 120px; height: 120px; }
     .section-title { font-size: clamp(1.6rem, 6vw, 2.2rem); }
     .btn { padding: 0.8rem 1.6rem; font-size: 0.75rem; }
     .big-btn { padding: 0.9rem 2rem; font-size: 0.85rem; }
     .eyebrow::before, .eyebrow::after { width: 25px; }
+}
+
+/* Extra small phones */
+@media (max-width: 360px) {
+    .hero-date { font-size: 0.65rem; letter-spacing: 0.15em; }
+    .hero-title { font-size: clamp(1.6rem, 9vw, 2.2rem); }
+    .hero-profile { width: 110px; height: 110px; }
+    .section { padding: 3.5rem 0.8rem; }
+    .hero { padding: 3rem 0.8rem 1.5rem; }
+    .countdown { gap: 0.4rem; }
+    .time-card { padding: 1rem 0.5rem; }
+    .time-num { font-size: clamp(1.2rem, 7vw, 2rem); }
+    .time-label { font-size: 0.55rem; letter-spacing: 0.15em; }
+    .section-title { font-size: clamp(1.4rem, 7vw, 2rem); }
+    .gallery-grid { column-count: 1; column-gap: 0.4rem; }
+    .gallery-item { margin-bottom: 0.4rem; }
+    .btn { padding: 0.7rem 1.4rem; font-size: 0.7rem; }
+    .big-btn { padding: 0.8rem 1.8rem; font-size: 0.8rem; }
+    .lb-close, .lb-prev, .lb-next { width: 40px; height: 40px; font-size: 1.1rem; }
+    .lb-prev { left: 12px; }
+    .lb-next { right: 12px; }
+    .lb-close { top: 15px; right: 15px; }
+    .lb-counter { font-size: 0.75rem; bottom: 15px; }
+    .music-btn { bottom: 15px; right: 15px; }
+    .back-to-top { bottom: 15px; left: 15px; width: 40px; height: 40px; }
+    .candles { gap: 15px; }
+    .layer-top { width: 90px; height: 35px; }
+    .layer-mid { width: 140px; height: 45px; }
+    .layer-bottom { width: 180px; height: 50px; }
+    .plate { width: 220px; }
+    .cake-stage { min-height: 200px; }
+    .surprise-card h3 { font-size: 1.8rem; }
+    .message-card { font-size: 0.9rem; }
+    .message-card .highlight { font-size: 1.4rem; }
+    .special-card h3 { font-size: 1rem; }
+    .special-icon { font-size: 1.8rem; }
+}
+
+/* Ultra small phones */
+@media (max-width: 320px) {
+    .hero-date { font-size: 0.6rem; }
+    .hero-title { font-size: clamp(1.5rem, 10vw, 2rem); }
+    .hero-profile { width: 100px; height: 100px; }
+    .section { padding: 3rem 0.6rem; }
+    .hero { padding: 2.5rem 0.6rem 1.2rem; }
+    .time-num { font-size: clamp(1.1rem, 8vw, 1.8rem); }
+    .time-label { font-size: 0.5rem; }
+    .btn { padding: 0.6rem 1.2rem; font-size: 0.65rem; }
+    .big-btn { padding: 0.7rem 1.6rem; font-size: 0.75rem; }
+    .cake-stage { min-height: 180px; }
+    .layer-top { width: 80px; height: 30px; }
+    .layer-mid { width: 120px; height: 40px; }
+    .layer-bottom { width: 160px; height: 45px; }
+    .plate { width: 200px; }
+    .lb-prev, .lb-next, .lb-close { width: 38px; height: 38px; font-size: 1rem; }
+    .music-btn { font-size: 0.7rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
