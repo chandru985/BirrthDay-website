@@ -107,13 +107,14 @@
         if (!days) return;
 
         const target = new Date(CFG.targetISO || Date.now() + 86400000).getTime();
+        let timer = null;
 
         function update() {
             const diff = target - Date.now();
             if (diff <= 0) {
                 days.textContent = hours.textContent = mins.textContent = secs.textContent = '00';
                 if (msg) msg.classList.remove('hidden');
-                clearInterval(timer);
+                if (timer) clearInterval(timer);
                 return;
             }
             const d = Math.floor(diff / 86400000);
@@ -127,7 +128,9 @@
         }
 
         update();
-        const timer = setInterval(update, 1000);
+        if (target - Date.now() > 0) {
+            timer = setInterval(update, 1000);
+        }
     }
 
     /* -------------------------------------------------
@@ -174,12 +177,17 @@
             const item = e.target.closest('.gallery-item');
             if (item) open(parseInt(item.dataset.index, 10));
         });
-        $('.lb-close', lb).addEventListener('click', close);
-        $('.lb-next', lb).addEventListener('click', next);
-        $('.lb-prev', lb).addEventListener('click', prev);
-        lb.addEventListener('click', e => { if (e.target === lb) close(); });
+        if (lb) {
+            const closeBtn = $('.lb-close', lb);
+            const nextBtn = $('.lb-next', lb);
+            const prevBtn = $('.lb-prev', lb);
+            if (closeBtn) closeBtn.addEventListener('click', close);
+            if (nextBtn) nextBtn.addEventListener('click', next);
+            if (prevBtn) prevBtn.addEventListener('click', prev);
+            lb.addEventListener('click', e => { if (e.target === lb) close(); });
+        }
         document.addEventListener('keydown', e => {
-            if (!lb.classList.contains('open')) return;
+            if (!lb || !lb.classList.contains('open')) return;
             if (e.key === 'Escape') close();
             if (e.key === 'ArrowRight') next();
             if (e.key === 'ArrowLeft') prev();
@@ -377,18 +385,35 @@
         const audio = $('#bgMusic');
         const btn = $('#musicBtn');
         if (!card) return;
+
         function open() {
+            if (card.classList.contains('opened')) return;
             card.classList.add('opened');
             burstConfetti();
             burstHearts(30);
-            setTimeout(() => card.remove(), 900);
+            setTimeout(() => {
+                if (card && card.parentNode) card.remove();
+            }, 900);
             if (audio && audio.paused) {
                 const p = audio.play();
                 if (p && p.catch) p.catch(() => {});
             }
             if (btn) btn.classList.add('playing');
         }
+
+        // Handle both card and inner button clicks
         card.addEventListener('click', open);
+        const cta = card.querySelector('.greeting-cta');
+        if (cta) {
+            cta.addEventListener('click', (e) => {
+                e.stopPropagation();
+                open();
+            });
+        }
+        card.addEventListener('touchend', e => {
+            e.preventDefault();
+            open();
+        }, { passive: false });
         card.addEventListener('keydown', e => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -460,20 +485,26 @@
     /* -------------------------------------------------
        Init
     ------------------------------------------------- */
-    document.addEventListener('DOMContentLoaded', () => {
-        applyBindings();
-        initBackgroundCanvas();
-        initCountdown();
-        initGallery();
-        initSurprise();
-        initCake();
-        initConfetti();
-        initReveal();
-        initBackToTop();
-        initMusic();
-        initGreetingCard();
-        initSmoothScroll();
-        initPremiumEffects();
-        ambientHearts();
-    });
+    function init() {
+        try { initGreetingCard(); } catch (err) { console.error('Greeting card init error:', err); }
+        try { applyBindings(); } catch (err) { console.error('Bindings error:', err); }
+        try { initBackgroundCanvas(); } catch (err) { console.error('Canvas error:', err); }
+        try { initCountdown(); } catch (err) { console.error('Countdown error:', err); }
+        try { initGallery(); } catch (err) { console.error('Gallery error:', err); }
+        try { initSurprise(); } catch (err) { console.error('Surprise error:', err); }
+        try { initCake(); } catch (err) { console.error('Cake error:', err); }
+        try { initConfetti(); } catch (err) { console.error('Confetti error:', err); }
+        try { initReveal(); } catch (err) { console.error('Reveal error:', err); }
+        try { initBackToTop(); } catch (err) { console.error('Back to top error:', err); }
+        try { initMusic(); } catch (err) { console.error('Music error:', err); }
+        try { initSmoothScroll(); } catch (err) { console.error('Smooth scroll error:', err); }
+        try { initPremiumEffects(); } catch (err) { console.error('Effects error:', err); }
+        try { ambientHearts(); } catch (err) { console.error('Hearts error:', err); }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();
