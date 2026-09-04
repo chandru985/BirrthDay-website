@@ -41,7 +41,11 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+}
 
 body {
     font-family: var(--font-body);
@@ -51,6 +55,8 @@ body {
                 linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 50%, var(--bg-0) 100%);
     min-height: 100vh;
     overflow-x: hidden;
+    width: 100%;
+    position: relative;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -71,16 +77,34 @@ a { color: inherit; text-decoration: none; }
 #bgCanvas {
     position: fixed;
     inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
     z-index: 0;
     pointer-events: none;
     will-change: transform;
 }
 
-.confetti-canvas { will-change: transform; }
+.confetti-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    z-index: 10001;
+    pointer-events: none;
+    will-change: transform;
+}
 
 .gradient-orbs {
     position: fixed;
     inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
     z-index: 0;
     pointer-events: none;
     overflow: hidden;
@@ -126,12 +150,10 @@ body::after {
     font-size: 0.75rem;
     color: var(--gold);
     text-align: center;
-    margin-bottom: 1rem;
+    margin: 0 auto 1rem;
     font-weight: 500;
     position: relative;
-    display: inline-block;
-    left: 50%;
-    transform: translateX(-50%);
+    display: table;
 }
 
 .eyebrow::before,
@@ -139,7 +161,7 @@ body::after {
     content: "";
     position: absolute;
     top: 50%;
-    width: 40px;
+    width: 36px;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--gold));
 }
@@ -874,12 +896,23 @@ body::after {
 /* =========================================================
    CAKE
    ========================================================= */
+#cake .container {
+    text-align: center;
+}
+
 .cake-stage {
     display: flex;
     justify-content: center;
     margin-bottom: 2rem;
     min-height: 280px;
     align-items: flex-end;
+}
+
+#blowBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
 }
 
 .cake {
