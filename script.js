@@ -32,7 +32,9 @@
         let w, h;
         const particles = [];
         const stars = [];
-        const COUNT = Math.min(60, Math.floor(window.innerWidth / 18));
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const maxCount = isTouch ? 25 : 60;
+        const COUNT = Math.min(maxCount, Math.floor(window.innerWidth / 18));
 
         function resize() {
             w = canvas.width = window.innerWidth;
@@ -341,9 +343,16 @@
     function initBackToTop() {
         const btn = $('#backToTop');
         if (!btn) return;
+        let ticking = false;
         window.addEventListener('scroll', () => {
-            btn.classList.toggle('visible', window.scrollY > 500);
-        });
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    btn.classList.toggle('visible', window.scrollY > 500);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
         btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
 
@@ -389,16 +398,20 @@
         function open() {
             if (card.classList.contains('opened')) return;
             card.classList.add('opened');
-            burstConfetti();
-            burstHearts(30);
+
             setTimeout(() => {
                 if (card && card.parentNode) card.remove();
+                document.body.style.overflow = '';
             }, 900);
+
             if (audio && audio.paused) {
                 const p = audio.play();
                 if (p && p.catch) p.catch(() => {});
             }
             if (btn) btn.classList.add('playing');
+
+            try { burstConfetti(); } catch (e) { console.debug('Confetti error:', e); }
+            try { burstHearts(30); } catch (e) { console.debug('Hearts error:', e); }
         }
 
         // Handle both card and inner button clicks

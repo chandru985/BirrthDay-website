@@ -73,7 +73,10 @@ a { color: inherit; text-decoration: none; }
     inset: 0;
     z-index: 0;
     pointer-events: none;
+    will-change: transform;
 }
+
+.confetti-canvas { will-change: transform; }
 
 .gradient-orbs {
     position: fixed;
@@ -1322,11 +1325,28 @@ body::after {
    RESPONSIVE
    ========================================================= */
 
-/* =========================================================
-   RESPONSIVE — Mobile First
-   ========================================================= */
+/* Mobile performance: reduce expensive filters during scroll */
+@media (max-width: 768px) {
+    .orb { filter: blur(50px); }
+    .glass-card, .time-card, .special-card, .t-card {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    body::after { display: none; }
+}
 
-/* Touch highlight suppression */
+@media (max-width: 576px) {
+    body::after { display: none; }
+    .orb { filter: blur(30px); }
+    .glass-card, .time-card, .special-card {
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
+}
+
+/* =========================================================
+   Responsive breakpoints
+   ========================================================= */
 .btn, .music-btn, .back-to-top, .special-card, .gallery-item,
 .lb-close, .lb-prev, .lb-next, #greetingCard, #blowBtn, #surpriseBtn,
 a, button {
